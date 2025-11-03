@@ -139,17 +139,23 @@ if not env_ok:
 # Import the FastAPI app
 try:
     print("\n⏳ Importing FastAPI application...")
-    from main import app as application
+    from main import app as fastapi_app
     
     print("=" * 70)
     print("✅ SUCCESS: FastAPI application imported")
-    print(f"✅ Application: {application.title}")
-    print(f"✅ Version: {application.version}")
+    print(f"✅ Application: {fastapi_app.title}")
+    print(f"✅ Version: {fastapi_app.version}")
     print(f"✅ Debug Mode: {os.getenv('DEBUG', 'True')}")
     
     # Get CORS configuration
     cors_origins = os.getenv('CORS_ORIGINS', '*')
     print(f"✅ CORS Origins: {cors_origins}")
+    
+    # Wrap FastAPI (ASGI) app with ASGI-to-WSGI adapter
+    print("\n🔄 Wrapping FastAPI with ASGI-to-WSGI adapter...")
+    from asgiref.wsgi import WsgiToAsgi
+    application = WsgiToAsgi(fastapi_app)
+    print("✅ ASGI-to-WSGI adapter applied")
     
     print("=" * 70)
     print("🎉 Backend is READY to handle requests!")
