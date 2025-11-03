@@ -154,19 +154,13 @@ try:
     # Wrap FastAPI (ASGI) app with ASGI-to-WSGI adapter
     print("\n🔄 Wrapping FastAPI with ASGI-to-WSGI adapter...")
     try:
-        from asgiref.wsgi import WsgiToAsgi
-        application = WsgiToAsgi(fastapi_app)
-        print("✅ ASGI-to-WSGI adapter applied (using asgiref)")
+        from a2wsgi import ASGIMiddleware
+        application = ASGIMiddleware(fastapi_app)
+        print("✅ ASGI-to-WSGI adapter applied (using a2wsgi)")
     except ImportError:
-        # Fallback: Try a2wsgi if asgiref is not available
-        try:
-            from a2wsgi import ASGIMiddleware
-            application = ASGIMiddleware(fastapi_app)
-            print("✅ ASGI-to-WSGI adapter applied (using a2wsgi)")
-        except ImportError:
-            print("❌ No ASGI-to-WSGI adapter available!")
-            print("   Install: pip install asgiref")
-            raise
+        print("❌ a2wsgi not installed!")
+        print("   Install: pip install a2wsgi==1.10.6")
+        raise
     
     print("=" * 70)
     print("🎉 Backend is READY to handle requests!")
