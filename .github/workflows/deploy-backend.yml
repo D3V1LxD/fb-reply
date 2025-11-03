@@ -1,0 +1,81 @@
+# GitHub Actions Workflow for PythonAnywhere Deployment
+# 
+# This workflow provides automated deployment to PythonAnywhere.
+# Manual deployment via PythonAnywhere console is simpler for most users.
+#
+# To use this workflow:
+# 1. Add secrets in GitHub: Settings > Secrets and variables > Actions
+#    - PYTHONANYWHERE_USERNAME: Your PythonAnywhere username
+#    - PYTHONANYWHERE_TOKEN: Get from https://www.pythonanywhere.com/account/#api_token
+# 2. Trigger manually from Actions tab or enable push trigger below
+
+name: Deploy Backend to PythonAnywhere
+
+on:
+  workflow_dispatch:  # Manual trigger from GitHub Actions tab
+  # Uncomment below to enable automatic deployment on push
+  # push:
+  #   branches: [ main ]
+  #   paths:
+  #     - 'backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Deploy to PythonAnywhere
+      run: |
+        # Install dependencies
+        pip install requests
+        
+        # Note: Replace YOUR_USERNAME and YOUR_TOKEN with actual values
+        # or configure as GitHub secrets
+        
+        echo "⚠️ This workflow is currently disabled"
+        echo "For deployment instructions, see backend/DEPLOYMENT.md"
+        echo ""
+        echo "To enable this workflow:"
+        echo "1. Add GitHub secrets: PYTHONANYWHERE_USERNAME and PYTHONANYWHERE_TOKEN"
+        echo "2. Uncomment the 'on:' triggers in this file"
+        echo "3. Use the deployment script below"
+        
+        # Deployment script (activate when secrets are configured)
+        # python3 << 'EOF'
+        # import os
+        # import requests
+        # 
+        # username = os.environ.get('PYTHONANYWHERE_USERNAME', 'YOUR_USERNAME')
+        # token = os.environ.get('PYTHONANYWHERE_TOKEN', 'YOUR_TOKEN')
+        # 
+        # url = f'https://www.pythonanywhere.com/api/v0/user/{username}/webapps/{username}.pythonanywhere.com/reload/'
+        # response = requests.post(url, headers={'Authorization': f'Token {token}'})
+        # 
+        # if response.status_code == 200:
+        #     print('✅ Web app reloaded successfully!')
+        # else:
+        #     print(f'❌ Error: {response.status_code}')
+        #     print(response.text)
+        # EOF
+
+# ============================================================================
+# RECOMMENDED: Manual Deployment (Easier and More Reliable)
+# ============================================================================
+# 
+# Instead of using GitHub Actions, we recommend manual deployment:
+#
+# 1. SSH into PythonAnywhere or use their Bash console
+# 2. Navigate to your project: cd ~/fb-reply-ai/backend
+# 3. Pull latest changes: git pull origin main
+# 4. Update dependencies: pip install -r requirements.txt
+# 5. Reload web app: Click "Reload" button in Web tab
+#
+# This approach is simpler and gives you more control over deployments.
